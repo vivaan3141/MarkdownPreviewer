@@ -3,41 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Live Previewer</title>
+    <title>Markdown Live Previewer & Guide</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; }
-        header { background: #282c34; color: white; padding: 1rem; text-align: center; font-weight: bold; }
-        .container { display: flex; flex: 1; overflow: hidden; }
+        :root { --bg: #282c34; --accent: #61dafb; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; height: 100vh; color: #333; }
         
-        textarea, #preview { width: 50%; height: 100%; padding: 20px; box-sizing: border-box; border: none; overflow-y: auto; }
+        /* Navigation */
+        nav { background: var(--bg); color: white; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .btn { background: var(--accent); border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; color: #282c34; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Layout Container */
+        .main-content { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        textarea { background: #f4f4f4; border-right: 1px solid #ddd; font-family: 'Courier New', monospace; resize: none; outline: none; }
-        
+        /* Editor & Preview Panes */
+        textarea, #preview, #guide { width: 50%; height: 100%; padding: 25px; box-sizing: border-box; overflow-y: auto; border: none; }
+        textarea { background: #f9f9f9; border-right: 1px solid #ddd; font-family: 'Fira Code', 'Courier New', monospace; outline: none; font-size: 14px; }
         #preview { background: white; line-height: 1.6; }
-        #preview h1 { border-bottom: 1px solid #eee; }
-        code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+
+        /* The Teaching Page (Hidden by default) */
+        #guide { 
+            position: absolute; left: 0; top: 0; width: 100%; background: white; 
+            display: none; z-index: 10; 
+        }
+        .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { border: 1px solid #eee; padding: 15px; border-radius: 8px; background: #fafafa; }
+        code { background: #e0e0e0; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        
+        /* Markdown Styling for Preview */
+        #preview h1, #preview h2 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+        #preview blockquote { border-left: 4px solid #dfe2e5; color: #6a737d; margin: 0; padding-left: 1em; }
     </style>
 </head>
 <body>
 
-<header>Markdown *Live* Previewer</header>
+<nav>
+    <span><strong>MD</strong> Previewer</span>
+    <button class="btn" id="toggleGuide">Learn Markdown</button>
+</nav>
 
-<div class="container">
-    <textarea id="editor" placeholder="Type your Markdown here..."></textarea>
+<div class="main-content">
+    <textarea id="editor" placeholder="Type Markdown here..."></textarea>
     <div id="preview"></div>
+
+    <div id="guide">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2>Markdown Cheat Sheet</h2>
+            <p>Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents.</p>
+            
+            <div class="guide-grid">
+                <div class="card">
+                    <h3>Headers</h3>
+                    <code># H1 Header</code><br>
+                    <code>## H2 Header</code>
+                </div>
+                <div class="card">
+                    <h3>Emphasis</h3>
+                    <code>*italic*</code> or <code>_italic_</code><br>
+                    <code>**bold**</code> or <code>__bold__</code>
+                </div>
+                <div class="card">
+                    <h3>Lists</h3>
+                    <code>- Item 1</code><br>
+                    <code>1. Ordered Item</code>
+                </div>
+                <div class="card">
+                    <h3>Links & Images</h3>
+                    <code>[Google](https://google.com)</code><br>
+                    <code>![Alt Text](image-url.jpg)</code>
+                </div>
+                <div class="card">
+                    <h3>Blockquotes</h3>
+                    <code>> This is a quote.</code>
+                </div>
+                <div class="card">
+                    <h3>Code</h3>
+                    <code>`inline code`</code><br>
+                    <code>```<br>block code<br>```</code>
+                </div>
+            </div>
+            <br>
+            <button class="btn" id="closeGuide">Back to Editor</button>
+        </div>
+    </div>
 </div>
 
 <script>
     const editor = document.getElementById('editor');
     const preview = document.getElementById('preview');
+    const guide = document.getElementById('guide');
+    const toggleBtn = document.getElementById('toggleGuide');
+    const closeBtn = document.getElementById('closeGuide');
 
+    // Live Preview Logic
     editor.addEventListener('input', () => {
-        const rawValue = editor.value;
-        preview.innerHTML = marked.parse(rawValue);
+        preview.innerHTML = marked.parse(editor.value);
     });
 
-    editor.value = "# Hello World\n\nStart typing to see the **magic** happen!";
+    // Toggle Guide Logic
+    toggleBtn.onclick = () => guide.style.display = 'block';
+    closeBtn.onclick = () => guide.style.display = 'none';
+
+    // Initial Load
+    editor.value = "# Welcome\n\nEdit this text to see the preview on the right!";
     preview.innerHTML = marked.parse(editor.value);
 </script>
 
