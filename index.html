@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Live Previewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; }
+        header { background: #282c34; color: white; padding: 1rem; text-align: center; font-weight: bold; }
+        .container { display: flex; flex: 1; overflow: hidden; }
+        
+        textarea, #preview { width: 50%; height: 100%; padding: 20px; box-sizing: border-box; border: none; overflow-y: auto; }
+        
+        textarea { background: #f4f4f4; border-right: 1px solid #ddd; font-family: 'Courier New', monospace; resize: none; outline: none; }
+        
+        #preview { background: white; line-height: 1.6; }
+        #preview h1 { border-bottom: 1px solid #eee; }
+        code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<header>Markdown *Live* Previewer</header>
+
+<div class="container">
+    <textarea id="editor" placeholder="Type your Markdown here..."></textarea>
+    <div id="preview"></div>
+</div>
+
+<script>
+    const editor = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+
+    editor.addEventListener('input', () => {
+        const rawValue = editor.value;
+        preview.innerHTML = marked.parse(rawValue);
+    });
+
+    editor.value = "# Hello World\n\nStart typing to see the **magic** happen!";
+    preview.innerHTML = marked.parse(editor.value);
+</script>
+
+</body>
+</html>
